@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+    name: repicaset-httpd
+    labels:
+        type: webserver
+        app: nothing
+spec:
+    template:
+        metadata:
+            name: httpd-pod
+            labels:
+                type: webserver
+                app: nothing
+        spec:
+            containers:
+                - name: httpd-cont
+                  image: httpd
+    replicas: 3
+    selector:
+        matchLabels:
+            type: webserver
