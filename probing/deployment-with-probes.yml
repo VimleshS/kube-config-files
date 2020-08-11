@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goapp
+  labels:
+    app: myapp
+    type: frontend
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: probe
+          image: vimlesh/probe
+          ports:
+            - containerPort: 8000
+          livenessProbe:
+              httpGet:
+                  path: /ping
+                  port: 8000
+              initialDelaySeconds: 10
+              periodSeconds: 10
+              failureThreshold: 2 
+          readinessProbe:
+              httpGet:
+                  path: /health
+                  port: 8000
+              initialDelaySeconds: 2
+              timeoutSeconds: 10
+              periodSeconds: 10
+              failureThreshold: 20 
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
